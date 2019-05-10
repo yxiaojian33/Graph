@@ -127,6 +127,7 @@
   <ItemGroup>
     <ClInclude Include="Edge.h" />
     <ClInclude Include="Graph.h" />
+    <ClInclude Include="PathList.h" />
     <ClInclude Include="Tourism.h" />
     <ClInclude Include="Vex.h" />
   </ItemGroup>

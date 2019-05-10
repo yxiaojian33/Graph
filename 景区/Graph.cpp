@@ -59,3 +59,55 @@ int FindEdge(Graph m_Graph,int nVex, Edge aEdge[]) {
 int GetVexnum(Graph m_Graph) {
 	return m_Graph.m_nVexNum;
 }
+void DFS(Graph m_Graph, int nVex, bool aVisited[], int& nIndex, PathList& pList)
+//使用深度优先搜索算法遍历图
+{
+	aVisited[nVex] = true;  // 改为已访问
+	pList->vexs[nIndex++] = nVex;  //访问顶点nVex
+	for (int i = 0; i < m_Graph.m_nVexNum;i++)  //搜索v的所有邻接点
+	{
+		if (m_Graph.m_aAdjMatrix[i][nVex] && !aVisited[i])
+		{
+			DFS(m_Graph,i, aVisited, nIndex, pList);  //递归调用DFS
+		}
+	}
+
+}
+void BetterDfs(Graph m_Graph,int v, bool bVisited[], int aPath[], int &index)
+{
+	bVisited[v] = true;  // 改为已访问
+	aPath[index++] = v;  // 访问顶点v
+	bool flag = true;
+	for (int i = 0; i < m_Graph.m_nVexNum; i++)
+		flag &= bVisited[i];
+	if (flag)
+	{
+		// 1、保存一条路径
+		for (int i = 0; i < m_Graph.m_nVexNum; i++)
+		{
+			cout << m_Graph.m_aVexs[ aPath[i]].name << " -------";
+		}
+		cout << endl;
+	}
+	else
+	{
+		for (int i = 0; i < m_Graph.m_nVexNum; i++)  // 搜素v的所有邻接点
+		{
+			if ( !bVisited[i]&& m_Graph.m_aAdjMatrix[v][i]>0 )
+			{
+				BetterDfs(m_Graph,i, bVisited, aPath, index); // 递归调用DFS
+				bVisited[i] = false;  // 2、改为未访问
+				index--;  // 索引值减1
+			}
+		}
+	}
+}
+void DFSTraverse(Graph m_Graph, int nVex, PathList& pList)
+//通过调用DFS()函数，得到深度优先搜索遍历结果
+{
+	int nIndex = 0;
+	int aPath[20] = { 0 };
+	bool aVisited[MAX_VERTEX_NUM] = { false };
+	//DFS(m_Graph,nVex, aVisited, nIndex, pList);
+	BetterDfs(m_Graph, nVex, aVisited, aPath, nIndex);
+}

@@ -2,6 +2,7 @@
 #define MAX_VERTEX_NUM 20
 #include"Vex.h"
 #include"Edge.h"
+#include "PathList.h"
 #include<fstream>
 #include<iostream>
 using namespace std;
@@ -22,4 +23,10 @@ int FindEdge(Graph m_Graph,int nVex, Edge aEdge[]);
 // 查询与指定顶点相连的边。
 int GetVexnum(Graph m_Graph);
 //获取当前顶点数。
+void DFS(Graph m_Graph,int nVex, bool bVisted[], int& nIndex, PathList& pList);
+//使用深度优先搜索算法遍历图
+void DFSTraverse(Graph m_Graph, int nVex, PathList& pList);
+//通过调用DFS()函数，得到深度优先搜索遍历结果
+void BetterDfs(Graph m_Graph, int v, bool bVisited[], int aPath[], int &index);
+//DFS优化得到多条路径
 

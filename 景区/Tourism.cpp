@@ -21,14 +21,14 @@ int CreateGraph(Graph& m_Graph) {
 
 	vexfile.close();
 	//Vex.txt文件读取完毕
-	cout << "各边：\n";
+	cout << "顶点1\t顶点2\t路径长度：\n";
 	ifstream edgefile("./Edge.txt", ios::in);
 	for (int i = 0;; i++)
 	{
 		Edge edge;
 		if (edgefile >> edge.vex1 >> edge.vex2 >> edge.weight)
 		{
-		  cout << edge.vex1 << "--->" << edge.vex2 << "\t" << edge.weight << endl;
+		  cout << edge.vex1 << "\t" << edge.vex2 << "\t" << edge.weight << endl;
 			if (!InsertEdge(m_Graph, edge))
 				cout << "下标越界\n";
 		}
@@ -49,10 +49,20 @@ void GetSpotInfo(Graph m_Graph) {
 	Vex vex = GetVex(m_Graph, choose);
 	cout << vex.name<<"\n"<<vex.desc << endl;
 	Edge edge[20];
+	cout << "附近景点：\n";
 	int num = FindEdge(m_Graph,choose,edge);
 	for (int i = 0; i < num; i++)
 	{
 		cout << edge[i].vex1 << "======" << edge[i].vex2 << "     " << edge[i].weight << endl;
 	}
+
+}
+void TravelPath(Graph m_Graph) {
+	PathList pList = new Path;
+	int choose;
+	cout << "请输入起始的景点编号：";
+	cin >> choose;
+	DFSTraverse( m_Graph, choose, pList);
+	
 
 }
