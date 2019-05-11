@@ -82,7 +82,7 @@ void BetterDfs(Graph m_Graph,int v, bool bVisited[], int aPath[], int &index)
 		flag &= bVisited[i];
 	if (flag)
 	{
-		// 1、保存一条路径
+		// 保存一条路径
 		for (int i = 0; i < m_Graph.m_nVexNum; i++)
 		{
 			cout << m_Graph.m_aVexs[ aPath[i]].name << " -------";
@@ -93,7 +93,7 @@ void BetterDfs(Graph m_Graph,int v, bool bVisited[], int aPath[], int &index)
 	{
 		for (int i = 0; i < m_Graph.m_nVexNum; i++)  // 搜素v的所有邻接点
 		{
-			if ( !bVisited[i]&& m_Graph.m_aAdjMatrix[v][i]>0 )
+			if ( !bVisited[i]&& m_Graph.m_aAdjMatrix[v][i] )
 			{
 				BetterDfs(m_Graph,i, bVisited, aPath, index); // 递归调用DFS
 				bVisited[i] = false;  // 2、改为未访问
@@ -110,4 +110,76 @@ void DFSTraverse(Graph m_Graph, int nVex, PathList& pList)
 	bool aVisited[MAX_VERTEX_NUM] = { false };
 	//DFS(m_Graph,nVex, aVisited, nIndex, pList);
 	BetterDfs(m_Graph, nVex, aVisited, aPath, nIndex);
+}
+int FindShortPath(Graph m_Graph, int nVexStart, int nVexEnd, Edge aPath[],int& nIndex) {
+	int  nShortPath[MAX_VERTEX_NUM][MAX_VERTEX_NUM]; // 保存最短路径
+	int  nShortDistance[MAX_VERTEX_NUM]; // 保存最短距离
+	bool  aVisited[MAX_VERTEX_NUM]; // 判断某顶点是否已经加入到最短路径
+	int  v;
+  // 初始化
+	for (v=0;v< m_Graph.m_nVexNum;v++){
+		aVisited[v]= false ;
+		if (m_Graph.m_aAdjMatrix[nVexStart][v]) {
+			// 初始化该顶点到其他顶点的最短距离，默认为两点间的距离
+			nShortDistance[v] = m_Graph.m_aAdjMatrix[nVexStart][v];
+		}
+		else {
+			// 如果顶点 i 和 nVexStart 不相连，则最短距离设为最大值
+			nShortDistance[v] = 0xffff;
+		}
+		nShortPath[v][0]=nVexStart; // 起始点为 nVexStart
+		for ( int j=1;j< m_Graph.m_nVexNum;j++){
+			nShortPath[v][j]=-1; // 初始化最短路径
+		}
+	}
+  // 初始化， nVexStart 顶点加入到集合中
+	aVisited[nVexStart]= true ;
+	int  min;
+	for ( int i=1;i< m_Graph.m_nVexNum;i++){
+		min=0xffff;
+		bool  bAdd= false ; // 判断是否还有顶点可以加入到集合中
+		for ( int j=0;j< m_Graph.m_nVexNum;j++){
+			if (aVisited[j]== false )
+			{
+				if (nShortDistance[j]<min)
+				{
+					v=j; //j 顶点离 nVexStart 顶点最近
+					min=nShortDistance[j]; //j 到 nVexStart 的最短距离为 min
+					bAdd= true ;
+				}
+			}
+		} // 如果没有顶点可以加入到集合，则跳出循环
+		if (bAdd == false) break;
+		aVisited[v]= true ; // 将顶点 j 加入到集合
+		nShortPath[v][i]=v; // 将顶点 j 保存到 nVexStart 到 j 的最短路径里
+		for ( int w=0;w< m_Graph.m_nVexNum;w++)
+		{
+			// 将 w 作为过度顶点计算 nVexStart 通过 w 到每个顶点的距离
+			if (aVisited[w]== false &&(min+ m_Graph.m_aAdjMatrix[v][w])<nShortDistance[w]&& m_Graph.m_aAdjMatrix[v][w])
+			{
+				// 更新当前最短路径及距离
+				nShortDistance[w]=min+ m_Graph.m_aAdjMatrix[v][w];
+				for ( int i=0;i< m_Graph.m_nVexNum;i++)
+				{
+					// 如果通过 w 到达顶点 i 的距离比较短，则将 w 的最短路径复制给 i
+					nShortPath[w][i]=nShortPath[v][i];
+				}
+			}
+		}
+	}
+	int  nVex1=nVexStart;
+	// 将最短路径保存为边的结构体数组
+	for ( int i=1;i< m_Graph.m_nVexNum;i++)
+	{
+		if (nShortPath[nVexEnd][i]!=-1)
+		{
+			aPath[nIndex].vex1=nVex1;
+			aPath[nIndex].vex2=nShortPath[nVexEnd][i];
+			aPath[nIndex].weight= m_Graph.m_aAdjMatrix[aPath[nIndex].vex1][aPath[nIndex].vex2];
+			nVex1=nShortPath[nVexEnd][i];
+			nIndex++;
+   }
+ }
+  return  nShortDistance[nVexEnd];
+
 }

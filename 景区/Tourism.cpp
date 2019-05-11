@@ -49,11 +49,11 @@ void GetSpotInfo(Graph m_Graph) {
 	Vex vex = GetVex(m_Graph, choose);
 	cout << vex.name<<"\n"<<vex.desc << endl;
 	Edge edge[20];
-	cout << "附近景点：\n";
+	cout << "附近景点\t距离\n";
 	int num = FindEdge(m_Graph,choose,edge);
 	for (int i = 0; i < num; i++)
 	{
-		cout << edge[i].vex1 << "======" << edge[i].vex2 << "     " << edge[i].weight << endl;
+		cout << m_Graph.m_aVexs[edge[i].vex2 ].name<< "\t\t" << edge[i].weight << endl;
 	}
 
 }
@@ -63,6 +63,24 @@ void TravelPath(Graph m_Graph) {
 	cout << "请输入起始的景点编号：";
 	cin >> choose;
 	DFSTraverse( m_Graph, choose, pList);
-	
 
+}
+void FindShortPath(Graph m_Graph) {
+	int start;
+	int end;
+	Edge edge[20];
+	cout << "请输入起始的景点编号：";
+	cin >> start;
+	cout << "请输入目标的景点编号：";
+	cin >> end;
+	int index=0;
+	cout<<"最短路径："<<FindShortPath(m_Graph, start, end, edge,index)<<endl;
+	if (index) {
+		for (int i = 0; i < index; i++) {
+			cout << "【" << m_Graph.m_aVexs[edge[i].vex1].name << "】----" << edge[i].weight << "---->";
+		}
+		cout << "【" << m_Graph.m_aVexs[edge[index - 1].vex2].name << "】" << endl;
+	}
+	else
+		cout << "不可到达\n";
 }

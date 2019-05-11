@@ -29,4 +29,6 @@ void DFSTraverse(Graph m_Graph, int nVex, PathList& pList);
 //通过调用DFS()函数，得到深度优先搜索遍历结果
 void BetterDfs(Graph m_Graph, int v, bool bVisited[], int aPath[], int &index);
 //DFS优化得到多条路径
+int FindShortPath(Graph m_Graph,int nVexStart, int nVexEnd, Edge aPath[],int& nIndex);
+//通过Dijkstra算法求得v1到v2的最短路径
 
