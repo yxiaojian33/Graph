@@ -178,8 +178,8 @@ int FindShortPath(Graph m_Graph, int nVexStart, int nVexEnd, Edge aPath[],int& n
 			aPath[nIndex].weight= m_Graph.m_aAdjMatrix[aPath[nIndex].vex1][aPath[nIndex].vex2];
 			nVex1=nShortPath[nVexEnd][i];
 			nIndex++;
-   }
- }
-  return  nShortDistance[nVexEnd];
+		}
+	}
+	return  nShortDistance[nVexEnd];
 
 }
