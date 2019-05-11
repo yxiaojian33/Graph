@@ -3,7 +3,7 @@ int main()
 {
 	Graph m_Graph;
 	Init(m_Graph);
-	string menu = "<========景区信息管理系统========>\n\t1.创建景区信息\n\t2.查询景点信息\n\t3.旅游景点导航\n\t4.搜索最短路径\n";
+	string menu = "<========景区信息管理系统========>\n\t1.创建景区信息\n\t2.查询景点信息\n\t3.旅游景点导航\n\t4.搜索最短路径\n\t5.铺设电缆规划\n";
 	cout << "	へ　　　　　／|" << endl;
 	cout << "　　/＼7　　　 ∠＿/" << endl;
 	cout << "　 /　│　　 ／　／" << endl;
@@ -33,6 +33,9 @@ int main()
 			break;
 		case 4:
 			FindShortPath(m_Graph);
+			break;
+		case 5:
+			DesignPath( m_Graph);
 			break;
 
 		}

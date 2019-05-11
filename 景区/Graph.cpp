@@ -40,6 +40,7 @@ Vex GetVex(Graph m_Graph,int nVex) {
 	return m_Graph.m_aVexs[nVex];
 
 }
+
 // 查询与指定顶点相连的边。
 int FindEdge(Graph m_Graph,int nVex, Edge aEdge[]) {
 	int k = 0;
@@ -125,21 +126,21 @@ int FindShortPath(Graph m_Graph, int nVexStart, int nVexEnd, Edge aPath[],int& n
 		}
 		else {
 			// 如果顶点 i 和 nVexStart 不相连，则最短距离设为最大值
-			nShortDistance[v] = 0xffff;
+			nShortDistance[v] = 0xfffff;
 		}
 		nShortPath[v][0]=nVexStart; // 起始点为 nVexStart
 		for ( int j=1;j< m_Graph.m_nVexNum;j++){
 			nShortPath[v][j]=-1; // 初始化最短路径
 		}
 	}
-  // 初始化， nVexStart 顶点加入到集合中
+    // 初始化， nVexStart 顶点加入到集合中
 	aVisited[nVexStart]= true ;
 	int  min;
 	for ( int i=1;i< m_Graph.m_nVexNum;i++){
-		min=0xffff;
+		min=0xfffff;
 		bool  bAdd= false ; // 判断是否还有顶点可以加入到集合中
 		for ( int j=0;j< m_Graph.m_nVexNum;j++){
-			if (aVisited[j]== false )
+			if (!aVisited[j] )
 			{
 				if (nShortDistance[j]<min)
 				{
@@ -149,13 +150,13 @@ int FindShortPath(Graph m_Graph, int nVexStart, int nVexEnd, Edge aPath[],int& n
 				}
 			}
 		} // 如果没有顶点可以加入到集合，则跳出循环
-		if (bAdd == false) break;
+		if (!bAdd ) break;
 		aVisited[v]= true ; // 将顶点 j 加入到集合
 		nShortPath[v][i]=v; // 将顶点 j 保存到 nVexStart 到 j 的最短路径里
 		for ( int w=0;w< m_Graph.m_nVexNum;w++)
 		{
 			// 将 w 作为过度顶点计算 nVexStart 通过 w 到每个顶点的距离
-			if (aVisited[w]== false &&(min+ m_Graph.m_aAdjMatrix[v][w])<nShortDistance[w]&& m_Graph.m_aAdjMatrix[v][w])
+			if (!aVisited[w] && (min+ m_Graph.m_aAdjMatrix[v][w])<nShortDistance[w] && m_Graph.m_aAdjMatrix[v][w])
 			{
 				// 更新当前最短路径及距离
 				nShortDistance[w]=min+ m_Graph.m_aAdjMatrix[v][w];
@@ -182,4 +183,38 @@ int FindShortPath(Graph m_Graph, int nVexStart, int nVexEnd, Edge aPath[],int& n
 	}
 	return  nShortDistance[nVexEnd];
 
+}
+int FindMinTree(Graph m_Graph, Edge aPath[]) {
+	bool aVisited[MAX_VERTEX_NUM];//判断某顶点是否在最小生成树顶点集合里 
+	for (int i = 0; i< m_Graph.m_nVexNum;i++)
+		aVisited[i] = false; 
+	aVisited[0] = true;//0顶点加入到集合中 
+	 int min,sum=0;  
+	 int nVex1, nVex2;
+		for (int k = 0; k< m_Graph.m_nVexNum-1;k++){ 
+			min = 0xfffff;
+			for (int i = 0; i < m_Graph.m_nVexNum;i++){
+				if (aVisited[i])//从集合中取一个顶点      
+				{       
+					for(int j=0;j< m_Graph.m_nVexNum;j++){
+
+						if (!aVisited[j] && m_Graph.m_aAdjMatrix[i][j] && (m_Graph.m_aAdjMatrix[i][j] < min)) {
+							nVex1 = i;
+							nVex2 = j;
+							min = m_Graph.m_aAdjMatrix[i][j];//找出最短的边    
+						}
+		
+					}
+				}
+			}    
+			//保存最短边的两个顶点   
+			aPath[k].vex1=nVex1; 
+			aPath[k].vex2 = nVex2; 
+			aPath[k].weight = m_Graph.m_aAdjMatrix[nVex1][nVex2];
+			//将两个顶点加入到集合 
+			sum += aPath[k].weight;
+			aVisited[nVex1] = true;  
+			aVisited[nVex2] = true;
+	  } 
+	return sum;
 }

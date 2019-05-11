@@ -31,4 +31,6 @@ void BetterDfs(Graph m_Graph, int v, bool bVisited[], int aPath[], int &index);
 //DFS优化得到多条路径
 int FindShortPath(Graph m_Graph,int nVexStart, int nVexEnd, Edge aPath[],int& nIndex);
 //通过Dijkstra算法求得v1到v2的最短路径
+int FindMinTree(Graph m_Graph, Edge aPath[]);
+//通过Prim算法构建最小生成树
 

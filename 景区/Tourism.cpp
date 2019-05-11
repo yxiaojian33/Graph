@@ -1,5 +1,13 @@
 #include"Tourism.h"
 //从文件初始化信息
+void ShowVex(Graph m_Graph) {
+	cout << "编号\t名称\n";
+	for (int i = 0; i < m_Graph.m_nVexNum; i++)
+	{
+		cout << m_Graph.m_aVexs[i].num << "\t" << m_Graph.m_aVexs[i].name << endl;
+	}
+}
+
 int CreateGraph(Graph& m_Graph) {
 	ifstream vexfile("./Vex.txt", ios::in);
 	if (!vexfile)
@@ -40,10 +48,7 @@ int CreateGraph(Graph& m_Graph) {
 }
 void GetSpotInfo(Graph m_Graph) {
 	int choose;
-	for (int i = 0; i < m_Graph.m_nVexNum; i++)
-	{
-		cout << m_Graph.m_aVexs[i].num << " " << m_Graph.m_aVexs[i].name << endl;
-	}
+	ShowVex(m_Graph);
 	cout << "请输入想要查询的景点编号：";
 	cin >> choose;
 	Vex vex = GetVex(m_Graph, choose);
@@ -60,6 +65,7 @@ void GetSpotInfo(Graph m_Graph) {
 void TravelPath(Graph m_Graph) {
 	PathList pList = new Path;
 	int choose;
+	ShowVex(m_Graph);
 	cout << "请输入起始的景点编号：";
 	cin >> choose;
 	DFSTraverse( m_Graph, choose, pList);
@@ -69,6 +75,7 @@ void FindShortPath(Graph m_Graph) {
 	int start;
 	int end;
 	Edge edge[20];
+	ShowVex(m_Graph);
 	cout << "请输入起始的景点编号：";
 	cin >> start;
 	cout << "请输入目标的景点编号：";
@@ -83,4 +90,11 @@ void FindShortPath(Graph m_Graph) {
 	}
 	else
 		cout << "不可到达\n";
+}
+void DesignPath(Graph m_Graph) {
+	Edge edge[20];
+	cout<<"最短电缆长度"<<FindMinTree(m_Graph, edge)<<endl;
+	for (int i = 0; i < m_Graph.m_nVexNum-1; i++) {
+		cout << "【"<<m_Graph.m_aVexs[ edge[i].vex1].name << "】---->【" << m_Graph.m_aVexs[edge[i].vex2].name << "】  " << edge[i].weight << endl;
+	}
 }
