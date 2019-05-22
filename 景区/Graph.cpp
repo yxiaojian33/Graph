@@ -112,6 +112,7 @@ void DFSTraverse(Graph m_Graph, int nVex, PathList& pList)
 	//DFS(m_Graph,nVex, aVisited, nIndex, pList);
 	BetterDfs(m_Graph, nVex, aVisited, aPath, nIndex);
 }
+
 int FindShortPath(Graph m_Graph, int nVexStart, int nVexEnd, Edge aPath[],int& nIndex) {
 	int  nShortPath[MAX_VERTEX_NUM][MAX_VERTEX_NUM]; // 保存最短路径
 	int  nShortDistance[MAX_VERTEX_NUM]; // 保存最短距离
@@ -144,14 +145,16 @@ int FindShortPath(Graph m_Graph, int nVexStart, int nVexEnd, Edge aPath[],int& n
 			{
 				if (nShortDistance[j]<min)
 				{
+					//cout << "min=short[" << j << "]=" << nShortDistance[j]<< endl;
 					v=j; //j 顶点离 nVexStart 顶点最近
 					min=nShortDistance[j]; //j 到 nVexStart 的最短距离为 min
 					bAdd= true ;
 				}
 			}
-		} // 如果没有顶点可以加入到集合，则跳出循环
+		} //每次选出距离起点第i短的点
 		if (!bAdd ) break;
 		aVisited[v]= true ; // 将顶点 j 加入到集合
+		//cout << "【" << v << "】【" << i << "】" << endl;
 		nShortPath[v][i]=v; // 将顶点 j 保存到 nVexStart 到 j 的最短路径里
 		for ( int w=0;w< m_Graph.m_nVexNum;w++)
 		{
@@ -159,17 +162,21 @@ int FindShortPath(Graph m_Graph, int nVexStart, int nVexEnd, Edge aPath[],int& n
 			if (!aVisited[w] && (min+ m_Graph.m_aAdjMatrix[v][w])<nShortDistance[w] && m_Graph.m_aAdjMatrix[v][w])
 			{
 				// 更新当前最短路径及距离
+				//cout << "路径更新:min=" << min << "\t【"<<v<<"】【"<<w<<"】=" << m_Graph.m_aAdjMatrix[v][w] << "\tshort【" << w << "】=" << nShortDistance[w] << endl;
 				nShortDistance[w]=min+ m_Graph.m_aAdjMatrix[v][w];
+				//cout << "w=" << w << "\tv=" << v << endl;
 				for ( int i=0;i< m_Graph.m_nVexNum;i++)
 				{
-					// 如果通过 w 到达顶点 i 的距离比较短，则将 w 的最短路径复制给 i
+					// 确定最短边后考虑其对其他点到起点距离的影响，若有影响则更新
 					nShortPath[w][i]=nShortPath[v][i];
+					//cout << nShortPath[v][i] << "\t";
 				}
+				//cout << endl;
 			}
 		}
 	}
 	int  nVex1=nVexStart;
-	// 将最短路径保存为边的结构体数组
+	// 保存路径
 	for ( int i=1;i< m_Graph.m_nVexNum;i++)
 	{
 		if (nShortPath[nVexEnd][i]!=-1)
@@ -188,20 +195,20 @@ int FindMinTree(Graph m_Graph, Edge aPath[]) {
 	bool aVisited[MAX_VERTEX_NUM];//判断某顶点是否在最小生成树顶点集合里 
 	for (int i = 0; i< m_Graph.m_nVexNum;i++)
 		aVisited[i] = false; 
-	aVisited[0] = true;//0顶点加入到集合中 
+	aVisited[0] = true;//假定从顶点0出发
 	 int min,sum=0;  
 	 int nVex1, nVex2;
 		for (int k = 0; k< m_Graph.m_nVexNum-1;k++){ 
 			min = 0xfffff;
 			for (int i = 0; i < m_Graph.m_nVexNum;i++){
-				if (aVisited[i])//从集合中取一个顶点      
+				if (aVisited[i])//从集合中选出一个顶点      
 				{       
 					for(int j=0;j< m_Graph.m_nVexNum;j++){
 
 						if (!aVisited[j] && m_Graph.m_aAdjMatrix[i][j] && (m_Graph.m_aAdjMatrix[i][j] < min)) {
 							nVex1 = i;
 							nVex2 = j;
-							min = m_Graph.m_aAdjMatrix[i][j];//找出最短的边    
+							min = m_Graph.m_aAdjMatrix[i][j];//找出距离点集合中距离最短的点   
 						}
 		
 					}
